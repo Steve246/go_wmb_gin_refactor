@@ -36,7 +36,7 @@ func initDbResource(dataSourceName string) (*gorm.DB, error) {
 	env := os.Getenv("ENV")
 	if env == "migration" {
 		db.Debug()
-		db.AutoMigrate(&model.Bill{}, &model.Discount{}, &model.Discount{}, &model.Menu{}, &model.Menu_Price{}, &model.Bill_Detail{}, &model.Customer{})
+		db.AutoMigrate(&model.Menu{}, &model.Menu_Price{}, &model.Bill_Detail{}, &model.Table{}, &model.Trans_Type{}, &model.Bill{}, &model.Customer{}, &model.Discount{})
 
 		//masukin table untuk dimigrate
 	} else if env == "dev" {
