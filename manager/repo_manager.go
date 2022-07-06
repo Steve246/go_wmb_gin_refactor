@@ -7,10 +7,15 @@ type RepositoryManager interface {
 	MenuPriceRepo() repo.PriceRepository
 	TableRepo() repo.TableRepository
 	TransRepo() repo.TransTypeRepository
+	DiscountRepo() repo.DiscountRepository
 }
 
 type repositoryManager struct {
 	infra Infra
+}
+
+func (r *repositoryManager) DiscountRepo() repo.DiscountRepository {
+	return repo.NewDiscountRepository(r.infra.SqlDb())
 }
 
 func (r *repositoryManager) TransRepo() repo.TransTypeRepository {

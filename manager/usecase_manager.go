@@ -22,10 +22,20 @@ type UseCaseManager interface {
 	CreateTransUsecase() usecase.CreateTransUsecase
 	UpdateTransUsecase() usecase.UpdateTransUsecase
 	DeleteTransUsecase() usecase.DeleteTransUsecase
+
+	//discount
+	CrudDiscountUsecase() usecase.CrudDiscount
 }
 
 type useCaseManager struct {
 	repoManager RepositoryManager
+}
+
+//discount
+
+func (u *useCaseManager) CrudDiscountUsecase() usecase.CrudDiscount {
+
+	return usecase.NewCrudDiscount(u.repoManager.DiscountRepo())
 }
 
 //trans

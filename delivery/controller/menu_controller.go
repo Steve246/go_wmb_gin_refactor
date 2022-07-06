@@ -38,10 +38,45 @@ type MenuController struct {
 	ucDeleteTrans usecase.DeleteTransUsecase
 	ucUpdateTrans usecase.UpdateTransUsecase
 
+	//discount
+
+	ucCrudDiscount usecase.CrudDiscount
+
 	api.BaseApi
 }
 
 //UPDATE
+
+func (m *MenuController) updateDiscount(c *gin.Context) {
+	var disc *model.Discount
+
+	//pake patch
+	//find by id --> update pake id
+
+	id := c.Param("id")
+
+	// var updateMenu map[string]interface{}
+
+	if err := c.BindJSON(&disc); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+	} else {
+		err := m.ucCrudDiscount.UpdateDiscount(disc, id)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"error": "Record not found!",
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "Update is Success",
+			"message": disc,
+		})
+
+	}
+
+}
 
 func (m *MenuController) updateTrans(c *gin.Context) {
 	var trans *model.Trans_Type
@@ -169,6 +204,30 @@ func (m *MenuController) updateMenu(c *gin.Context) {
 
 //DELETE
 
+func (m *MenuController) deleteDiscount(c *gin.Context) {
+	var discount *model.Discount
+
+	if err := c.BindJSON(&discount); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+	} else {
+		err := m.ucCrudDiscount.DeleteDiscount(discount)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"error": "Record not found!",
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"status": "Delete Is Success",
+			// "message": newMenu,
+		})
+
+	}
+
+}
+
 func (m *MenuController) deleteTrans(c *gin.Context) {
 	var trans *model.Trans_Type
 
@@ -266,6 +325,30 @@ func (m *MenuController) deleteMenu(c *gin.Context) {
 }
 
 //CREATE
+func (m *MenuController) createDiscount(c *gin.Context) {
+	var discount *model.Discount
+
+	if err := c.BindJSON(&discount); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+	} else {
+		err := m.ucCrudDiscount.CreateDiscount(discount)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"status":  "FAILED",
+				"message": "Error when creating menu",
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "success",
+			"message": discount,
+		})
+
+	}
+}
+
 func (m *MenuController) createTrans(c *gin.Context) {
 	var newTable *model.Trans_Type
 
@@ -379,6 +462,8 @@ func NewMenuController(router *gin.Engine,
 	ucDeleteTrans usecase.DeleteTransUsecase,
 	ucUpdateTrans usecase.UpdateTransUsecase,
 
+	ucCrudDiscount usecase.CrudDiscount,
+
 ) *MenuController {
 
 	controller := MenuController{
@@ -398,6 +483,8 @@ func NewMenuController(router *gin.Engine,
 		ucCreateTrans: ucCreateTrans,
 		ucDeleteTrans: ucDeleteTrans,
 		ucUpdateTrans: ucUpdateTrans,
+
+		ucCrudDiscount: ucCrudDiscount,
 	}
 
 	//                      SOAL 1 - CRUD MENU
@@ -483,6 +570,22 @@ func NewMenuController(router *gin.Engine,
 	// http://localhost:8888/transUpdate/:id
 
 	//                    SOAL 5 - CRUD Discount
+
+	//masukin data discount
+
+	router.POST("/discount", controller.createDiscount)
+	// http://localhost:8888/discount
+
+	// soft delete data tabel
+	router.DELETE("/discountDelete", controller.deleteDiscount)
+	// http://localhost:8888/discountDelete
+
+	//update data tabel
+
+	router.PATCH("/discountUpdate/:id", controller.updateDiscount)
+	// http://localhost:8888/discountUpdate/:id
+
+	//                    SOAL 6 - CRUD Discount
 
 	return &controller
 
