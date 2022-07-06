@@ -63,6 +63,8 @@ type MenuController struct {
 	api.BaseApi
 }
 
+//Usecase Print bill
+
 //Usecase Validate Meja
 
 func (m *MenuController) validateTable(c *gin.Context) {
@@ -736,6 +738,8 @@ func NewMenuController(router *gin.Engine,
 	// http://localhost:8888/validateMeja
 
 	//soal 9 PrintBill
+
+	router.GET("/PrintBill", controller.validateTable)
 
 	return &controller
 
