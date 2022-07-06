@@ -12,11 +12,41 @@ type TableRepository interface {
 	Delete(menuPrice *model.Table) error
 	Update(menuPrice *model.Table, id string) error
 
+	UpdateStatus(table *model.Table, by map[string]interface{}) error
+
 	FindFirstByTable(by map[string]interface{}) (model.Table, error)
+
+	FindByIdTable(id string) (model.Table, error)
 }
 
 type tableRepository struct {
 	db *gorm.DB
+}
+
+func (c *tableRepository) UpdateStatus(table *model.Table, by map[string]interface{}) error {
+	result := c.db.Model(table).Updates(by)
+
+	if err := result.Error; err != nil {
+		return err
+	}
+	return nil
+
+}
+
+func (c *tableRepository) FindByIdTable(id string) (model.Table, error) {
+	var tableDetail model.Table
+	result := c.db.Unscoped().First(&tableDetail, "id = ?", id)
+
+	if err := result.Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return tableDetail, nil
+		} else {
+			return tableDetail, err
+		}
+
+	}
+
+	return tableDetail, nil
 }
 
 func (c *tableRepository) FindFirstByTable(by map[string]interface{}) (model.Table, error) {

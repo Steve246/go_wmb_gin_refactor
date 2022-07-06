@@ -57,6 +57,9 @@ type MenuController struct {
 
 	ucValidateTable usecase.CekTableUsecase
 
+	//printBill
+	ucPrintBIll usecase.PrintBillUsecase
+
 	api.BaseApi
 }
 
@@ -583,6 +586,8 @@ func NewMenuController(router *gin.Engine,
 
 	ucValidateTable usecase.CekTableUsecase,
 
+	ucPrintBIll usecase.PrintBillUsecase,
+
 ) *MenuController {
 
 	controller := MenuController{
@@ -610,6 +615,8 @@ func NewMenuController(router *gin.Engine,
 		ucUpdateMembership: ucUpdateMembership,
 
 		ucValidateTable: ucValidateTable,
+
+		ucPrintBIll: ucPrintBIll,
 	}
 
 	//                      SOAL 1 - CRUD MENU
@@ -722,8 +729,14 @@ func NewMenuController(router *gin.Engine,
 	router.PATCH("/customerAktif", controller.memberActivate)
 	// http://localhost:8888/customerAktif
 
-	return &controller
-
 	// Soal 8 Validasi Meja
+
+	router.GET("/validateMeja", controller.validateTable)
+
+	// http://localhost:8888/validateMeja
+
+	//soal 9 PrintBill
+
+	return &controller
 
 }

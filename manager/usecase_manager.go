@@ -36,10 +36,23 @@ type UseCaseManager interface {
 	//cekMeha
 
 	ValidateTableUsecase() usecase.CekTableUsecase
+
+	//print bill
+
+	PrintBillUsecase() usecase.PrintBillUsecase
 }
 
 type useCaseManager struct {
 	repoManager RepositoryManager
+}
+
+//print Bill
+
+func (u *useCaseManager) PrintBillUsecase() usecase.PrintBillUsecase {
+	return usecase.NewPrintBillUsecase(u.repoManager.tBillDetail())
+
+	// testAja := u.repoManager.tBillDetail()
+
 }
 
 //validate table
