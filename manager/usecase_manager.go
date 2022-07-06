@@ -29,10 +29,19 @@ type UseCaseManager interface {
 	//customer
 
 	CrudCustomerUsecase() usecase.CrudCustomer
+
+	//memberActivation
+	ActivateMemberUsecase() usecase.MemberActiveUsecase
 }
 
 type useCaseManager struct {
 	repoManager RepositoryManager
+}
+
+//activate member usecase
+func (u *useCaseManager) ActivateMemberUsecase() usecase.MemberActiveUsecase {
+
+	return usecase.NewMemberActiveUsecase(u.repoManager.CustomerRepo())
 }
 
 //customer

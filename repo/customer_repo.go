@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"errors"
 	"go_wmb_gin_refactor/model"
 
 	"gorm.io/gorm"
@@ -11,14 +12,41 @@ type CustRepository interface {
 	Delete(menuPrice *model.Customer) error
 	Update(menuPrice *model.Customer, id string) error
 
+	UpdateForActivate(menuPrice *model.Customer, by map[string]interface{}) error
+
 	//bikin get first by dan update
 	// Update(menuPrice *model.Customer, by map[string]interface{}) error
 
-	// FindFirstBy(by map[string]interface{}) (model.Customer, error)
+	FindFirstBy(by map[string]interface{}) (model.Customer, error)
 }
 
 type custRepository struct {
 	db *gorm.DB
+}
+
+func (c *custRepository) UpdateForActivate(menuPrice *model.Customer, by map[string]interface{}) error {
+
+	result := c.db.Model(menuPrice).Updates(by)
+
+	if err := result.Error; err != nil {
+		return err
+	}
+	return nil
+
+}
+
+func (c *custRepository) FindFirstBy(by map[string]interface{}) (model.Customer, error) {
+	var customer model.Customer
+	result := c.db.Unscoped().Where(by).First(&customer)
+
+	if err := result.Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return customer, nil
+		} else {
+			return customer, err
+		}
+	}
+	return customer, nil
 }
 
 func (c *custRepository) Delete(menuPrice *model.Customer) error {

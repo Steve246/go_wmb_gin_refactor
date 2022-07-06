@@ -46,7 +46,38 @@ type MenuController struct {
 
 	ucCrudCustomer usecase.CrudCustomer
 
+	//updateStatusMembership
+
+	ucUpdateMembership usecase.MemberActiveUsecase
+
 	api.BaseApi
+}
+
+//Usecase Activate Member
+
+func (m *MenuController) memberActivate(c *gin.Context) {
+
+	var ms model.MemberActivate
+
+	if err := c.BindJSON(&ms); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+	} else {
+		customerWMB, err := m.ucUpdateMembership.ActivateMember(ms.NamaCustomer, ms.NoHpCustomer)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"error": "Record not found!",
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "Update is Success",
+			"message": customerWMB,
+		})
+
+	}
+
 }
 
 //UPDATE
@@ -495,6 +526,8 @@ func NewMenuController(router *gin.Engine,
 
 	ucCrudCustomer usecase.CrudCustomer,
 
+	ucUpdateMembership usecase.MemberActiveUsecase,
+
 ) *MenuController {
 
 	controller := MenuController{
@@ -518,6 +551,8 @@ func NewMenuController(router *gin.Engine,
 		ucCrudDiscount: ucCrudDiscount,
 
 		ucCrudCustomer: ucCrudCustomer,
+
+		ucUpdateMembership: ucUpdateMembership,
 	}
 
 	//                      SOAL 1 - CRUD MENU
@@ -625,7 +660,10 @@ func NewMenuController(router *gin.Engine,
 	router.POST("/customerRegis", controller.createCustomer)
 	// http://localhost:8888/customerRegis
 
-	//                    SOAL 6 MELAKUKAN CUSTOMER REGIS
+	//                 SOAL 7 Aktivasi Status Member customer
+
+	router.PATCH("/customerAktif", controller.memberActivate)
+	// http://localhost:8888/customerAktif
 
 	return &controller
 
