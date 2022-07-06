@@ -57,6 +57,8 @@ func (a *appServer) iniController() {
 		a.useCaseManager.CrudCustomerUsecase(),
 
 		a.useCaseManager.ActivateMemberUsecase(),
+
+		a.useCaseManager.ValidateTableUsecase(),
 	)
 
 }

@@ -32,10 +32,21 @@ type UseCaseManager interface {
 
 	//memberActivation
 	ActivateMemberUsecase() usecase.MemberActiveUsecase
+
+	//cekMeha
+
+	ValidateTableUsecase() usecase.CekTableUsecase
 }
 
 type useCaseManager struct {
 	repoManager RepositoryManager
+}
+
+//validate table
+
+func (u *useCaseManager) ValidateTableUsecase() usecase.CekTableUsecase {
+
+	return usecase.NewCekTableUsecase(u.repoManager.TableRepo())
 }
 
 //activate member usecase

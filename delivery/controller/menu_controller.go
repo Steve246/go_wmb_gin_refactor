@@ -3,10 +3,13 @@ package controller
 import (
 	"go_wmb_gin_refactor/delivery/api"
 	"go_wmb_gin_refactor/model"
+	"go_wmb_gin_refactor/repo"
 	"go_wmb_gin_refactor/usecase"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 //Nambain usecase
@@ -50,7 +53,57 @@ type MenuController struct {
 
 	ucUpdateMembership usecase.MemberActiveUsecase
 
+	//validateTable
+
+	ucValidateTable usecase.CekTableUsecase
+
 	api.BaseApi
+}
+
+//Usecase Validate Meja
+
+func (m *MenuController) validateTable(c *gin.Context) {
+
+	var ts model.CekMeja
+
+	if err := c.BindJSON(&ts); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+	} else {
+		tableStatus, err := m.ucValidateTable.RunCekMeja(ts.NamaMeja, ts.StatusDuduk)
+
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"status": "Meja sudah dipesan, silakan cari meja lain",
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "Transaksi akan dilakukan",
+			"message": tableStatus,
+		})
+
+		var db *gorm.DB
+
+		repo := repo.NewBillRepository(db)
+
+		billId := uuid.New()
+		transId := uuid.New()
+
+		bill01 := model.Bill{
+			Id:    billId.String(),
+			Table: tableStatus,
+			Trans_Type: model.Trans_Type{
+				Id:                transId.String(),
+				Trans_Description: "El",
+			},
+		}
+
+		repo.Create(&bill01)
+
+	}
+
 }
 
 //Usecase Activate Member
@@ -528,6 +581,8 @@ func NewMenuController(router *gin.Engine,
 
 	ucUpdateMembership usecase.MemberActiveUsecase,
 
+	ucValidateTable usecase.CekTableUsecase,
+
 ) *MenuController {
 
 	controller := MenuController{
@@ -553,6 +608,8 @@ func NewMenuController(router *gin.Engine,
 		ucCrudCustomer: ucCrudCustomer,
 
 		ucUpdateMembership: ucUpdateMembership,
+
+		ucValidateTable: ucValidateTable,
 	}
 
 	//                      SOAL 1 - CRUD MENU
@@ -666,5 +723,7 @@ func NewMenuController(router *gin.Engine,
 	// http://localhost:8888/customerAktif
 
 	return &controller
+
+	// Soal 8 Validasi Meja
 
 }

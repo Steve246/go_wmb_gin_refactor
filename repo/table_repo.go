@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"errors"
 	"go_wmb_gin_refactor/model"
 
 	"gorm.io/gorm"
@@ -10,10 +11,26 @@ type TableRepository interface {
 	Create(menuPrice *model.Table) error
 	Delete(menuPrice *model.Table) error
 	Update(menuPrice *model.Table, id string) error
+
+	FindFirstByTable(by map[string]interface{}) (model.Table, error)
 }
 
 type tableRepository struct {
 	db *gorm.DB
+}
+
+func (c *tableRepository) FindFirstByTable(by map[string]interface{}) (model.Table, error) {
+	var table model.Table
+	result := c.db.Unscoped().Where(by).First(&table)
+
+	if err := result.Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return table, nil
+		} else {
+			return table, err
+		}
+	}
+	return table, nil
 }
 
 func (c *tableRepository) Update(menuPrice *model.Table, id string) error {
