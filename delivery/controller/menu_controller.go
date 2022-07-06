@@ -625,6 +625,8 @@ func NewMenuController(router *gin.Engine,
 	router.POST("/customerRegis", controller.createCustomer)
 	// http://localhost:8888/customerRegis
 
+	//                    SOAL 6 MELAKUKAN CUSTOMER REGIS
+
 	return &controller
 
 }
