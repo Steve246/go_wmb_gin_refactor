@@ -20,7 +20,7 @@ type Config struct {
 
 func (c *Config) readConfig() {
 	api := os.Getenv("API_URL")
-	//localhost:8888
+	//set API_URL=localhost:8888
 	// c.ApiConfig = ApiConfig{Url: api}
 
 	dbHost := os.Getenv("DB_HOST")         //set DB_HOST=localhost
