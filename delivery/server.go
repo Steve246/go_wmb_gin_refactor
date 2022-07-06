@@ -53,6 +53,8 @@ func (a *appServer) iniController() {
 		a.useCaseManager.UpdateTransUsecase(),
 
 		a.useCaseManager.CrudDiscountUsecase(),
+
+		a.useCaseManager.CrudCustomerUsecase(),
 	)
 
 }

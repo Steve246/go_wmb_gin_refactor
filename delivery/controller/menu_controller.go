@@ -42,6 +42,10 @@ type MenuController struct {
 
 	ucCrudDiscount usecase.CrudDiscount
 
+	//customer
+
+	ucCrudCustomer usecase.CrudCustomer
+
 	api.BaseApi
 }
 
@@ -325,6 +329,31 @@ func (m *MenuController) deleteMenu(c *gin.Context) {
 }
 
 //CREATE
+
+func (m *MenuController) createCustomer(c *gin.Context) {
+	var customerNew *model.Customer
+
+	if err := c.BindJSON(&customerNew); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+	} else {
+		err := m.ucCrudCustomer.CreateCustomer(customerNew)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"status":  "FAILED",
+				"message": "Error when creating menu",
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "success",
+			"message": customerNew,
+		})
+
+	}
+}
+
 func (m *MenuController) createDiscount(c *gin.Context) {
 	var discount *model.Discount
 
@@ -464,6 +493,8 @@ func NewMenuController(router *gin.Engine,
 
 	ucCrudDiscount usecase.CrudDiscount,
 
+	ucCrudCustomer usecase.CrudCustomer,
+
 ) *MenuController {
 
 	controller := MenuController{
@@ -485,6 +516,8 @@ func NewMenuController(router *gin.Engine,
 		ucUpdateTrans: ucUpdateTrans,
 
 		ucCrudDiscount: ucCrudDiscount,
+
+		ucCrudCustomer: ucCrudCustomer,
 	}
 
 	//                      SOAL 1 - CRUD MENU
@@ -585,7 +618,12 @@ func NewMenuController(router *gin.Engine,
 	router.PATCH("/discountUpdate/:id", controller.updateDiscount)
 	// http://localhost:8888/discountUpdate/:id
 
-	//                    SOAL 6 - CRUD Discount
+	//                    SOAL 6 MELAKUKAN CUSTOMER REGIS
+
+	//create customer --> regis
+
+	router.POST("/customerRegis", controller.createCustomer)
+	// http://localhost:8888/customerRegis
 
 	return &controller
 

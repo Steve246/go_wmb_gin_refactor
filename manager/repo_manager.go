@@ -8,10 +8,15 @@ type RepositoryManager interface {
 	TableRepo() repo.TableRepository
 	TransRepo() repo.TransTypeRepository
 	DiscountRepo() repo.DiscountRepository
+	CustomerRepo() repo.CustRepository
 }
 
 type repositoryManager struct {
 	infra Infra
+}
+
+func (r *repositoryManager) CustomerRepo() repo.CustRepository {
+	return repo.NewCustRepository(r.infra.SqlDb())
 }
 
 func (r *repositoryManager) DiscountRepo() repo.DiscountRepository {

@@ -25,10 +25,21 @@ type UseCaseManager interface {
 
 	//discount
 	CrudDiscountUsecase() usecase.CrudDiscount
+
+	//customer
+
+	CrudCustomerUsecase() usecase.CrudCustomer
 }
 
 type useCaseManager struct {
 	repoManager RepositoryManager
+}
+
+//customer
+
+func (u *useCaseManager) CrudCustomerUsecase() usecase.CrudCustomer {
+
+	return usecase.NewCrudCustomer(u.repoManager.CustomerRepo())
 }
 
 //discount
