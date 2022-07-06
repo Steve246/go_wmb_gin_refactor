@@ -15,10 +15,66 @@ type MenuController struct {
 	router *gin.Engine
 
 	ucCreateMenu usecase.CreateMenuUsecase
-	// ucUpdateMenu usecase.UpdateMenuUsecase
-	// ucDeleteMenu usecase.DeleteMenuUsecase
+	ucDeleteMenu usecase.DeleteMenuUsecase
+	ucUpdateMenu usecase.UpdateMenuUsecase
 
 	api.BaseApi
+}
+
+func (m *MenuController) updateMenu(c *gin.Context) {
+	var menu *model.Menu
+
+	//pake patch
+	//find by id
+	//validate
+
+	id := c.Param("id")
+
+	// var updateMenu map[string]interface{}
+
+	if err := c.BindJSON(&menu); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+	} else {
+		err := m.ucUpdateMenu.UpdateMenu(menu, id)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"error": "Record not found!",
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "Update is Success",
+			"message": menu,
+		})
+
+	}
+
+}
+
+func (m *MenuController) deleteMenu(c *gin.Context) {
+	var menu *model.Menu
+
+	if err := c.BindJSON(&menu); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+	} else {
+		err := m.ucDeleteMenu.DeleteMenu(menu)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"error": "Record not found!",
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"status": "Delete Is Success",
+			// "message": newMenu,
+		})
+
+	}
+
 }
 
 func (m *MenuController) createNewMenu(c *gin.Context) {
@@ -33,7 +89,7 @@ func (m *MenuController) createNewMenu(c *gin.Context) {
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 				"status":  "FAILED",
-				"message": "Error when creating Product",
+				"message": "Error when creating menu",
 			})
 			return
 		}
@@ -45,13 +101,15 @@ func (m *MenuController) createNewMenu(c *gin.Context) {
 	}
 }
 
-func NewMenuController(router *gin.Engine, ucCreateMenu usecase.CreateMenuUsecase) *MenuController {
+func NewMenuController(router *gin.Engine, ucCreateMenu usecase.CreateMenuUsecase, ucDeleteMenu usecase.DeleteMenuUsecase, ucUpdateMenu usecase.UpdateMenuUsecase) *MenuController {
 	controller := MenuController{
 		router:       router,
 		ucCreateMenu: ucCreateMenu,
+		ucDeleteMenu: ucDeleteMenu,
+		ucUpdateMenu: ucUpdateMenu,
 	}
 
-	//masukin post atau get disini
+	//masukin data menu
 
 	router.POST("/product", controller.createNewMenu)
 	// http://localhost:8888/product
@@ -60,6 +118,27 @@ func NewMenuController(router *gin.Engine, ucCreateMenu usecase.CreateMenuUsecas
 	// {
 	//   "menuId": "C0001",
 	//   "menuText": "MakananEnajk"
+	// }
+
+	// soft delete data menu
+	router.DELETE("/productDelete", controller.deleteMenu)
+	// http://localhost:8888/productDelete
+
+	//masukin data dibawah
+	// {
+	//   "menuId": "C0001",
+	//   "menuText": "MakananEnajk"
+	// }
+
+	//update data menu
+
+	router.PATCH("/productUpdate/:id", controller.updateMenu)
+	// http://localhost:8888/productUpdate/C0002
+
+	//masukin data dibawah
+	// {
+	//   "menuId": "C0002",
+	//   "menuText": "Gorengan Mie Sedap"
 	// }
 
 	return &controller

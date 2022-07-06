@@ -9,7 +9,8 @@ import (
 type MenuRepository interface {
 	Create(menuFood *model.Menu) error
 	Delete(menuFood *model.Menu) error
-	Update(menuName *model.Menu, by map[string]interface{}) error
+	// Update(menuName *model.Menu, by map[string]interface{}) error
+	Update(menuName *model.Menu, id string) error
 }
 
 type menuRepository struct {
@@ -21,9 +22,11 @@ func (c *menuRepository) Delete(menuFood *model.Menu) error {
 	return result
 }
 
-func (c *menuRepository) Update(menuName *model.Menu, by map[string]interface{}) error {
+func (c *menuRepository) Update(menuName *model.Menu, id string) error {
 
-	result := c.db.Model(menuName).Updates(by)
+	var menu model.Menu
+
+	result := c.db.Model(menuName).First(&menu, "id = ?", id).Updates(menuName)
 
 	if err := result.Error; err != nil {
 		return err
@@ -31,6 +34,17 @@ func (c *menuRepository) Update(menuName *model.Menu, by map[string]interface{})
 	return nil
 
 }
+
+// func (c *menuRepository) Update(menuName *model.Menu, by map[string]interface{}) error {
+
+// 	result := c.db.Model(menuName).Updates(by)
+
+// 	if err := result.Error; err != nil {
+// 		return err
+// 	}
+// 	return nil
+
+// }
 
 func (c *menuRepository) Create(menuFood *model.Menu) error {
 	err := c.db.Create(menuFood).Error
