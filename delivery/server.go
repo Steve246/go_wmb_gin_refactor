@@ -34,7 +34,20 @@ func Server() *appServer {
 
 func (a *appServer) iniController() {
 
-	controller.NewMenuController(a.engine, a.useCaseManager.CreateMenuUsecase(), a.useCaseManager.DeleteMenuUsecase(), a.useCaseManager.UpdateMenuUsecase(), a.useCaseManager.CreateMenuPriceUsecase(), a.useCaseManager.DeleteMenuPriceUsecase(), a.useCaseManager.UpdateMenuPriceUsecase())
+	controller.NewMenuController(
+		a.engine,
+		a.useCaseManager.CreateMenuUsecase(),
+		a.useCaseManager.DeleteMenuUsecase(),
+		a.useCaseManager.UpdateMenuUsecase(),
+
+		a.useCaseManager.CreateMenuPriceUsecase(),
+		a.useCaseManager.DeleteMenuPriceUsecase(),
+		a.useCaseManager.UpdateMenuPriceUsecase(),
+
+		a.useCaseManager.CreateTableUsecase(),
+		a.useCaseManager.DeleteTableUsecase(),
+		a.useCaseManager.UpdateTableUsecase(),
+	)
 
 }
 

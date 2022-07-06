@@ -3,17 +3,40 @@ package manager
 import "go_wmb_gin_refactor/usecase"
 
 type UseCaseManager interface {
+	//Menu
 	CreateMenuUsecase() usecase.CreateMenuUsecase
 	UpdateMenuUsecase() usecase.UpdateMenuUsecase
 	DeleteMenuUsecase() usecase.DeleteMenuUsecase
 
+	//Menu Price
 	CreateMenuPriceUsecase() usecase.CreateMenuPriceUsecase
 	UpdateMenuPriceUsecase() usecase.UpdateMenuPriceUsecase
 	DeleteMenuPriceUsecase() usecase.DeleteMenuPriceUsecase
+
+	//Table
+	CreateTableUsecase() usecase.CreateTableUsecase
+	UpdateTableUsecase() usecase.UpdateTableUsecase
+	DeleteTableUsecase() usecase.DeleteTableUsecase
 }
 
 type useCaseManager struct {
 	repoManager RepositoryManager
+}
+
+//Table
+
+func (u *useCaseManager) DeleteTableUsecase() usecase.DeleteTableUsecase {
+
+	return usecase.NewDeleteTableUsecase(u.repoManager.TableRepo())
+}
+
+func (u *useCaseManager) UpdateTableUsecase() usecase.UpdateTableUsecase {
+
+	return usecase.NewUpdateTableUsecase(u.repoManager.TableRepo())
+}
+
+func (u *useCaseManager) CreateTableUsecase() usecase.CreateTableUsecase {
+	return usecase.NewCreateTableUseCase(u.repoManager.TableRepo())
 }
 
 //Menu Price
