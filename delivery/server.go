@@ -2,6 +2,7 @@ package delivery
 
 import (
 	"go_wmb_gin_refactor/config"
+	"go_wmb_gin_refactor/delivery/controller"
 	"go_wmb_gin_refactor/manager"
 
 	"github.com/gin-gonic/gin"
@@ -32,6 +33,8 @@ func Server() *appServer {
 }
 
 func (a *appServer) iniController() {
+
+	controller.NewMenuController(a.engine, a.useCaseManager.CreateMenuUsecase())
 
 }
 

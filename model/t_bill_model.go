@@ -1,12 +1,18 @@
 package model
 
+import "gorm.io/datatypes"
+
 type Bill struct {
 	Id string `gorm:"primaryKey" json:"billId"`
-	// trans_date    int64       `gorm:"autoCreateTime"`
-	Customer_Id []*Discount `gorm:"many2many:customer_discount"` //many to many
-	// Table_Id      []Table
-	Trans_Type_Id []Trans_Type
-	BaseModel     BaseModel `gorm:"embedded"`
+
+	Trans_Date datatypes.Time
+
+	// Customer_Id []*Discount `gorm:"many2many:customer_discount"` //many to many
+	Table_Id      int
+	Table         Table `gorm:"foreignKey:Table_Id"`
+	Trans_Type_Id int
+	Trans_Type    Trans_Type `gorm:"foreignKey:Trans_Type_Id"`
+	BaseModel     BaseModel  `gorm:"embedded"`
 }
 
 func (tr Bill) TableName() string {

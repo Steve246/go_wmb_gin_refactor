@@ -51,7 +51,16 @@ func NewMenuController(router *gin.Engine, ucCreateMenu usecase.CreateMenuUsecas
 		ucCreateMenu: ucCreateMenu,
 	}
 
+	//masukin post atau get disini
+
 	router.POST("/product", controller.createNewMenu)
+	// http://localhost:8888/product
+
+	//masukin data dibawah
+	// {
+	//   "menuId": "C0001",
+	//   "menuText": "MakananEnajk"
+	// }
 
 	return &controller
 

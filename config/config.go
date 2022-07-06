@@ -27,7 +27,7 @@ func (c *Config) readConfig() {
 	dbPort := os.Getenv("DB_PORT")         //set DB_PORT=5432
 	dbUser := os.Getenv("DB_USER")         //set DB_USER=postgres
 	dbPassword := os.Getenv("DB_PASSWORD") //set DB_PASSWORD=12345678
-	dbName := os.Getenv("DB_NAME")         //set DB_NAME=db_gorms_wmb
+	dbName := os.Getenv("DB_NAME")         //set DB_NAME=db_gin_latihan
 
 	// urutan url koneksi ke db postgres buat gorm
 	// localhost:postgres@12345678:db_enigma_shop_v2/5432
