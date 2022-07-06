@@ -25,8 +25,7 @@ func (m *MenuController) updateMenu(c *gin.Context) {
 	var menu *model.Menu
 
 	//pake patch
-	//find by id
-	//validate
+	//find by id --> update pake id
 
 	id := c.Param("id")
 
