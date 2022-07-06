@@ -136,7 +136,7 @@ func NewMenuController(router *gin.Engine, ucCreateMenu usecase.CreateMenuUsecas
 
 	//masukin data dibawah
 	// {
-	//   "menuId": "C0002",
+	//
 	//   "menuText": "Gorengan Mie Sedap"
 	// }
 
