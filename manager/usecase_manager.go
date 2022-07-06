@@ -39,7 +39,7 @@ type UseCaseManager interface {
 
 	//print bill
 
-	PrintBillUsecase() usecase.PrintBillUsecase
+	// PrintBillUsecase() usecase.PrintBillUsecase
 }
 
 type useCaseManager struct {
@@ -48,12 +48,12 @@ type useCaseManager struct {
 
 //print Bill
 
-func (u *useCaseManager) PrintBillUsecase() usecase.PrintBillUsecase {
-	return usecase.NewPrintBillUsecase(u.repoManager.tBillDetail())
+// func (u *useCaseManager) PrintBillUsecase() usecase.PrintBillUsecase {
+// 	return usecase.NewPrintBillUsecase(u.repoManager.tBillDetailRepo())
 
-	// testAja := u.repoManager.tBillDetail()
+// 	// testAja := u.repoManager.tBillDetail()
 
-}
+// }
 
 //validate table
 

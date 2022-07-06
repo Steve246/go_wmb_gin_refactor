@@ -10,14 +10,14 @@ type RepositoryManager interface {
 	DiscountRepo() repo.DiscountRepository
 	CustomerRepo() repo.CustRepository
 	tBillRepo() repo.BillRepository
-	tBillDetail() repo.BillDetailRepository
+	tBillDetailRepo() repo.BillDetailRepository
 }
 
 type repositoryManager struct {
 	infra Infra
 }
 
-func (r *repositoryManager) tBillDetail() repo.BillDetailRepository {
+func (r *repositoryManager) tBillDetailRepo() repo.BillDetailRepository {
 	return repo.NewBillDetailRepository(r.infra.SqlDb())
 }
 

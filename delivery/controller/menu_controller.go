@@ -58,7 +58,7 @@ type MenuController struct {
 	ucValidateTable usecase.CekTableUsecase
 
 	//printBill
-	ucPrintBIll usecase.PrintBillUsecase
+	// ucPrintBIll usecase.PrintBillUsecase
 
 	api.BaseApi
 }
@@ -586,7 +586,7 @@ func NewMenuController(router *gin.Engine,
 
 	ucValidateTable usecase.CekTableUsecase,
 
-	ucPrintBIll usecase.PrintBillUsecase,
+	// ucPrintBIll usecase.PrintBillUsecase,
 
 ) *MenuController {
 
@@ -616,7 +616,7 @@ func NewMenuController(router *gin.Engine,
 
 		ucValidateTable: ucValidateTable,
 
-		ucPrintBIll: ucPrintBIll,
+		// ucPrintBIll: ucPrintBIll,
 	}
 
 	//                      SOAL 1 - CRUD MENU
