@@ -32,10 +32,47 @@ type MenuController struct {
 	ucDeleteTable usecase.DeleteTableUsecase
 	ucUpdateTable usecase.UpdateTableUsecase
 
+	// trans controller
+
+	ucCreateTrans usecase.CreateTransUsecase
+	ucDeleteTrans usecase.DeleteTransUsecase
+	ucUpdateTrans usecase.UpdateTransUsecase
+
 	api.BaseApi
 }
 
 //UPDATE
+
+func (m *MenuController) updateTrans(c *gin.Context) {
+	var trans *model.Trans_Type
+
+	//pake patch
+	//find by id --> update pake id
+
+	id := c.Param("id")
+
+	// var updateMenu map[string]interface{}
+
+	if err := c.BindJSON(&trans); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+	} else {
+		err := m.ucUpdateTrans.UpdateTrans(trans, id)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"error": "Record not found!",
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "Update is Success",
+			"message": trans,
+		})
+
+	}
+
+}
 
 func (m *MenuController) updateTable(c *gin.Context) {
 	var table *model.Table
@@ -132,6 +169,30 @@ func (m *MenuController) updateMenu(c *gin.Context) {
 
 //DELETE
 
+func (m *MenuController) deleteTrans(c *gin.Context) {
+	var trans *model.Trans_Type
+
+	if err := c.BindJSON(&trans); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+	} else {
+		err := m.ucDeleteTrans.DeleteTrans(trans)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"error": "Record not found!",
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"status": "Delete Is Success",
+			// "message": newMenu,
+		})
+
+	}
+
+}
+
 func (m *MenuController) deleteTable(c *gin.Context) {
 	var table *model.Table
 
@@ -205,6 +266,29 @@ func (m *MenuController) deleteMenu(c *gin.Context) {
 }
 
 //CREATE
+func (m *MenuController) createTrans(c *gin.Context) {
+	var newTable *model.Trans_Type
+
+	if err := c.BindJSON(&newTable); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+	} else {
+		err := m.ucCreateTrans.CreateTrans(newTable)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"status":  "FAILED",
+				"message": "Error when creating menu",
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "success",
+			"message": newTable,
+		})
+
+	}
+}
 
 func (m *MenuController) createTable(c *gin.Context) {
 	var newTable *model.Table
@@ -283,11 +367,19 @@ func NewMenuController(router *gin.Engine,
 	ucDeleteMenu usecase.DeleteMenuUsecase,
 	ucUpdateMenu usecase.UpdateMenuUsecase,
 
-	ucCreateMenuPrice usecase.CreateMenuPriceUsecase, ucDeleteMenuPrice usecase.DeleteMenuPriceUsecase, ucUpdateMenuPrice usecase.UpdateMenuPriceUsecase,
+	ucCreateMenuPrice usecase.CreateMenuPriceUsecase,
+	ucDeleteMenuPrice usecase.DeleteMenuPriceUsecase,
+	ucUpdateMenuPrice usecase.UpdateMenuPriceUsecase,
 
 	ucCreateTable usecase.CreateTableUsecase,
 	ucDeleteTable usecase.DeleteTableUsecase,
-	ucUpdateTable usecase.UpdateTableUsecase) *MenuController {
+	ucUpdateTable usecase.UpdateTableUsecase,
+
+	ucCreateTrans usecase.CreateTransUsecase,
+	ucDeleteTrans usecase.DeleteTransUsecase,
+	ucUpdateTrans usecase.UpdateTransUsecase,
+
+) *MenuController {
 
 	controller := MenuController{
 		router:       router,
@@ -302,6 +394,10 @@ func NewMenuController(router *gin.Engine,
 		ucCreateTable: ucCreateTable,
 		ucDeleteTable: ucDeleteTable,
 		ucUpdateTable: ucUpdateTable,
+
+		ucCreateTrans: ucCreateTrans,
+		ucDeleteTrans: ucDeleteTrans,
+		ucUpdateTrans: ucUpdateTrans,
 	}
 
 	//                      SOAL 1 - CRUD MENU
@@ -369,6 +465,24 @@ func NewMenuController(router *gin.Engine,
 
 	router.PATCH("/tableUpdate/:id", controller.updateTable)
 	// http://localhost:8888/tableUpdate/:id
+
+	//                    SOAL 4 - CRUD TRANS TYPE
+
+	//masukin data trans
+
+	router.POST("/trans", controller.createTrans)
+	// http://localhost:8888/trans
+
+	// soft delete data tabel
+	router.DELETE("/transDelete", controller.deleteTrans)
+	// http://localhost:8888/transDelete
+
+	//update data tabel
+
+	router.PATCH("/transUpdate/:id", controller.updateTrans)
+	// http://localhost:8888/transUpdate/:id
+
+	//                    SOAL 5 - CRUD Discount
 
 	return &controller
 

@@ -17,10 +17,31 @@ type UseCaseManager interface {
 	CreateTableUsecase() usecase.CreateTableUsecase
 	UpdateTableUsecase() usecase.UpdateTableUsecase
 	DeleteTableUsecase() usecase.DeleteTableUsecase
+
+	//trans
+	CreateTransUsecase() usecase.CreateTransUsecase
+	UpdateTransUsecase() usecase.UpdateTransUsecase
+	DeleteTransUsecase() usecase.DeleteTransUsecase
 }
 
 type useCaseManager struct {
 	repoManager RepositoryManager
+}
+
+//trans
+
+func (u *useCaseManager) DeleteTransUsecase() usecase.DeleteTransUsecase {
+
+	return usecase.NewDeleteTransUsecase(u.repoManager.TransRepo())
+}
+
+func (u *useCaseManager) UpdateTransUsecase() usecase.UpdateTransUsecase {
+
+	return usecase.NewUpdateTransUsecase(u.repoManager.TransRepo())
+}
+
+func (u *useCaseManager) CreateTransUsecase() usecase.CreateTransUsecase {
+	return usecase.NewCreateTransUsecase(u.repoManager.TransRepo())
 }
 
 //Table

@@ -47,6 +47,10 @@ func (a *appServer) iniController() {
 		a.useCaseManager.CreateTableUsecase(),
 		a.useCaseManager.DeleteTableUsecase(),
 		a.useCaseManager.UpdateTableUsecase(),
+
+		a.useCaseManager.CreateTransUsecase(),
+		a.useCaseManager.DeleteTransUsecase(),
+		a.useCaseManager.UpdateTransUsecase(),
 	)
 
 }

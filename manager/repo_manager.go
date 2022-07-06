@@ -6,10 +6,15 @@ type RepositoryManager interface {
 	MenuRepo() repo.MenuRepository
 	MenuPriceRepo() repo.PriceRepository
 	TableRepo() repo.TableRepository
+	TransRepo() repo.TransTypeRepository
 }
 
 type repositoryManager struct {
 	infra Infra
+}
+
+func (r *repositoryManager) TransRepo() repo.TransTypeRepository {
+	return repo.NewTransTypeRepository(r.infra.SqlDb())
 }
 
 func (r *repositoryManager) TableRepo() repo.TableRepository {
